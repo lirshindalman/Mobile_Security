@@ -1,4 +1,4 @@
-package com.example.hw_1_mobile_security;
+package com.example.mobile_security;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,42 +56,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private void checkCondition() {
         String input = main_LBL_name.getText().toString();
 
-        if (("" + memoryStorage()).equals(input)) {
-            openNewActivity();
-        } else if (isVolumeMax()) {
-            openNewActivity();
-        } else if (batteryLevel() == 99) {
-            openNewActivity();
-        } else if (("" + currentBrightness()).equals(input)) {
-            openNewActivity();
-        } else if (totalContacts() > 50){
-            openNewActivity();
-        } else if (isRingerModeOn()){
-            openNewActivity();
-        } else if (isLandscape()){
-            openNewActivity();
-        } else if (checkNumber(input)) {
+        if (batteryLevel(input) || checkPhoneNumber(input) || isLandscape()|| isRingerModeOn() || ("" + currentBrightness()).equals(input)) {
             openNewActivity();
         }
 
-        getLocation();
+        ifLocationInDizengoffSquareTelAvivYafo();
     }
 
-
-    // Checks the count of free memory available on the phone
-    private long memoryStorage() {
-        ActivityManager.MemoryInfo memory = new ActivityManager.MemoryInfo();
-        ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-        activityManager.getMemoryInfo(memory);
-
-        return memory.availMem / 1048576L;
-    }
 
     // Checks the percentage of battery in the phone
-    private int batteryLevel() {
+    private boolean batteryLevel(String input) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
-        return batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        return input.contains(batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)+"");
     }
 
     // Checks the current brightness in the phone
@@ -117,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     // Checks if the phone number appears in the contacts
-    private boolean checkNumber(String phoneNumber) {
+    private boolean checkPhoneNumber(String phoneNumber) {
 
         if(phoneNumber.isEmpty()) {
             return false;
@@ -130,14 +107,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         return cur.moveToFirst();
     }
 
-    private void openNewActivity() {
-        Intent intent = new Intent(MainActivity.this, New_Page.class);
-        startActivity(intent);
-    }
-
     //Check the location of the phone
     @SuppressLint("MissingPermission")
-    private void getLocation() {
+    private void ifLocationInDizengoffSquareTelAvivYafo() {
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, MainActivity.this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, MainActivity.this);
@@ -185,19 +157,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     public void onLocationChanged(@NonNull Location location) {
         double latitude = location.getLatitude();
         double longitude = location.getLongitude();
-
-        if(latitude == 32.1149152 && longitude == 34.8181039) {
+        //location in in Dizengoff Square, Tel Aviv-Yafo
+        if(latitude == 32.0779583 && longitude == 34.7742048) {
             openNewActivity();
         }
     }
 
-    @Override
-    public void onProviderEnabled(@NonNull String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(@NonNull String provider) {
-
+    private void openNewActivity() {
+        Intent intent = new Intent(MainActivity.this, New_Page.class);
+        startActivity(intent);
     }
 }

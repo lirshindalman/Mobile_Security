@@ -1,4 +1,4 @@
-package com.example.hw_1_mobile_security;
+package com.example.mobile_security;
 
 import org.junit.Test;
 

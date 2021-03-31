@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.example.hw_1_mobile_security"
+        applicationId "com.example.mobile_security"
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
