@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">HW_1_Mobile_Security</string>
+    <string name="your_name">Your name:</string>
+    <string name="login">Log-in</string>
+</resources>
