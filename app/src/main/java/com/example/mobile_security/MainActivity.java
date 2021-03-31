@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         ifLocationInDizengoffSquareTelAvivYafo();
     }
 
-
     // Checks the percentage of battery in the phone
     private boolean batteryLevel(String input) {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
