@@ -13,10 +13,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private Button main_BTN_login;
     private EditText main_LBL_name;
     private LocationManager locationManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +56,19 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private void checkCondition() {
         String input = main_LBL_name.getText().toString();
 
-        if(isPackageAvailable(input)) {
+        if (("" + memoryStorage()).equals(input)) {
             openNewActivity();
-        } else if (("" + memoryStorage()).equals(input)) {
+        } else if (isVolumeMax()) {
             openNewActivity();
-        } else if (batteryLevel() == 23) {
+        } else if (batteryLevel() == 99) {
             openNewActivity();
         } else if (("" + currentBrightness()).equals(input)) {
             openNewActivity();
-        } else if (("" + totalContacts()).equals(input)) {
+        } else if (totalContacts() > 50){
+            openNewActivity();
+        } else if (isRingerModeOn()){
+            openNewActivity();
+        } else if (isLandscape()){
             openNewActivity();
         } else if (checkNumber(input)) {
             openNewActivity();
@@ -70,18 +77,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         getLocation();
     }
 
-    //Check if the application is installed on the phone
-    private boolean isPackageAvailable(String packageName) {
-        boolean available = true;
-
-        try {
-            getPackageManager().getPackageInfo(packageName, 0);
-        } catch (PackageManager.NameNotFoundException e) {
-            available = false;
-        }
-
-        return available;
-    }
 
     // Checks the count of free memory available on the phone
     private long memoryStorage() {
@@ -96,21 +91,20 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private int batteryLevel() {
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         Intent batteryStatus = getApplicationContext().registerReceiver(null, ifilter);
-
         return batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
     }
 
     // Checks the current brightness in the phone
     private float currentBrightness() {
-        float curBrightnessValue = 0;
+        float currentBrightnessVal = 0;
         try {
-            curBrightnessValue = android.provider.Settings.System.getInt(
+            currentBrightnessVal = android.provider.Settings.System.getInt(
                     getContentResolver(), android.provider.Settings.System.SCREEN_BRIGHTNESS);
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
         }
 
-        return curBrightnessValue;
+        return currentBrightnessVal;
     }
 
     // Get the amount of contacts in the phone
@@ -124,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     // Checks if the phone number appears in the contacts
     private boolean checkNumber(String phoneNumber) {
-        
+
         if(phoneNumber.isEmpty()) {
             return false;
         }
@@ -145,7 +139,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @SuppressLint("MissingPermission")
     private void getLocation() {
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, MainActivity.this);
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, MainActivity.this);
 
@@ -160,11 +153,32 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED
-                         ) {
+        ) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.READ_CONTACTS
             }, 100);
         }
+    }
+    //Return true if device is on ringer mode
+    public boolean isRingerModeOn() {
+        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        return audioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL;
+    }
+
+    //Return true if device is on ringer mode
+    public boolean isVolumeMax(){
+        AudioManager audio = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int currentVolume = audio.getStreamVolume(AudioManager.STREAM_MUSIC);
+        int maxVolume = audio.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        return currentVolume == maxVolume;
+    }
+
+    public boolean isLandscape() {
+        int orientation = getResources().getConfiguration().orientation;
+        if(orientation == Configuration.ORIENTATION_LANDSCAPE)
+            return true;
+        else
+            return false;
     }
 
     @Override

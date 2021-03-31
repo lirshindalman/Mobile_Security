@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:background="#B0B9FF69"
+    android:background="#F5E0DD"
     tools:context=".MainActivity">
 
     <EditText
@@ -22,6 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_gravity="center"
-        android:background="#469849"
+        android:background="#EDA887"
         android:text="@string/login"/>
 </LinearLayout>

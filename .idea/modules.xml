@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Mobile_Security.iml" filepath="$PROJECT_DIR$/.idea/modules/Mobile_Security.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HW_1_Mobile_Security.iml" filepath="$PROJECT_DIR$/.idea/modules/HW_1_Mobile_Security.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/HW_1_Mobile_Security.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/HW_1_Mobile_Security.app.iml" />
     </modules>
   </component>
 </project>
